@@ -1,0 +1,21 @@
+body {
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+}
+
+.game-board {
+    margin: 100px;
+    width: 50vw;
+    height: 50vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: black;
+    row-gap: 3px;
+    column-gap: 3px;
+    
+}
+
+.tile {
+    background-color: white;
+}
