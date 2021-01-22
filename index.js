@@ -21,13 +21,15 @@ const gameBoard = (() => {
     }
 
     // Reset gameboard for a new game
-    const _resetBoard = function() {
+    const resetBoard = function() {
         board = ['','','','','','','','',''];
     }
+
 
     return {
         getCurrentBoard,
         placeMarker,
+        resetBoard,
     }
 })();
 
@@ -47,7 +49,7 @@ const displayController = (() => {
             let tile = document.createElement('div')
             tile.classList.add('tile')
             tile.setAttribute('data-position', i);
-            tile.textContent = 'Test';
+            tile.textContent = '';
             tile.addEventListener('click', gameController.makeMove)
             boardDiv.append(tile);
         }
@@ -61,9 +63,37 @@ const displayController = (() => {
         }
     }
 
+    const displayWinner = function(player) {
+        let winnerDisplay = document.createElement('div');
+        winnerDisplay.classList.add('gameover-display');
+        winnerDisplay.textContent = `${player} Wins!`;
+        let body = document.querySelector('body');
+        body.appendChild(winnerDisplay);
+        let newGameButton = document.createElement('button')
+        newGameButton.classList.add('new-game')
+        newGameButton.textContent = 'New Game';
+        newGameButton.addEventListener('click', gameController.newGame)
+        body.appendChild(newGameButton)
+    }
+
+    const displayDraw = function() {
+        let drawDisplay = document.createElement('div');
+        drawDisplay.classList.add('gameover-display');
+        drawDisplay.textContent = `It's a Tie!`;
+        let body = document.querySelector('body');
+        body.appendChild(drawDisplay);
+        let newGameButton = document.createElement('button')
+        newGameButton.classList.add('new-game')
+        newGameButton.textContent = 'New Game';
+        newGameButton.addEventListener('click', gameController.newGame)
+        body.appendChild(newGameButton)
+    }
+
     return {
         generateBoard,
         updateBoard,
+        displayWinner,
+        displayDraw,
     }
 
 })();
@@ -130,16 +160,32 @@ const gameController = (() => {
 
     const _winGame = function() {
         gameOver = true;
-        console.log('Winner is: ' + _getCurrentPlayer())
+        displayController.displayWinner(_getCurrentPlayer())
     }
 
     const _drawGame = function() {
         gameOver = true;
-        console.log('It\'s a draw!')
+        displayController.displayDraw();
+    }
+
+    const newGame = function() {
+        // Reset's board, turncount, and display
+        gameBoard.resetBoard()
+        displayController.updateBoard(gameBoard.getCurrentBoard())
+        turnCount = 1;
+        gameOver = false;
+        // Removes gameover message and new game button
+        document.querySelector('.new-game').remove()
+        document.querySelector('.gameover-display').remove()
+        
+
+
+
     }
 
     return {
         makeMove,
+        newGame,
     }
 })()
 
